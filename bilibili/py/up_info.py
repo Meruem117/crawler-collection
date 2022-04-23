@@ -1,20 +1,12 @@
 import requests
 import json
 import csv
-import time
-
-import requests
-import json
-import csv
-import time
+import constant
 
 
 def get_up_info(mid: str):
     url = 'https://api.bilibili.com/x/web-interface/card?mid=' + mid
-    headers = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3237.0 Safari/537.36'
-    }
-    response = requests.get(url=url, headers=headers)
+    response = requests.get(url=url, headers=constant.HEADERS)
     dataset = json.loads(response.text)
     # data = json.dumps(dataset, sort_keys=True, indent=4, separators=(',', ': '), ensure_ascii=False)
     # print(data)

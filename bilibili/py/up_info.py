@@ -29,13 +29,13 @@ def get_up_info(mid: str) -> None:
     sign: str = card.get('sign')
     # official description
     official = card.get('Official')
-    title = official.get('title')
-    desc = official.get('desc')
+    title: str = official.get('title')
+    desc: str = official.get('desc')
     # statistics
-    video_num = data.get('archive_count')
-    article_num = data.get('article_count')
-    follower_num = data.get('follower')
-    like_num = data.get('like_num')
+    video_num: int = data.get('archive_count')
+    article_num: int = data.get('article_count')
+    follower_num: int = data.get('follower')
+    like_num: int = data.get('like_num')
 
 
 if __name__ == '__main__':

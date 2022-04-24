@@ -5,10 +5,10 @@ import time
 import constant
 
 
-def search_key(kw):
+def common_search(key):
     search_url = 'https://www.douban.com/search'
     param = {
-        'q': kw
+        'q': key
     }
     response = requests.get(url=search_url, params=param, headers=constant.HEADERS)
     html = response.text.encode("utf-8")

@@ -19,9 +19,13 @@ def common_search(key):
         if bs.find_all('span') and bs.find_all('span')[0].text == '[电影]':
             a = bs.find_all('a', target="_blank")[0]
             name = a.text
-            if kw.split()[0] == name.split()[0]:
+            if key.split()[0] == name.split()[0]:
                 h = a.get('href')
                 href = h.split('&')[0].split('=')[1]
                 video_url = parse.unquote(href)
                 urls.append(video_url)
     print(urls)
+
+
+if __name__ == '__main__':
+    common_search("hhh")

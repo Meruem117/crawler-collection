@@ -1,6 +1,5 @@
 import pymysql
-       
-        
+
 # 将list内容直接导入到mysql数据库(好像不太稳定，主要是由于数据格式有问题)
 # 数据少的时候还是可以的
 if __name__ == '__main__':

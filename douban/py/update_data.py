@@ -1,11 +1,4 @@
 import csv
-import datetime
-import re
-import time
-import urllib.error
-import urllib.request
-import requests
-from bs4 import BeautifulSoup
 import random
 import string
 

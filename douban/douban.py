@@ -46,7 +46,7 @@ def get_data(url):
     # print(html)
 
     soup = BeautifulSoup(html, "html.parser")
-    item = str(soup.find_all('div', id='content'))  # 只有一个
+    item = str(soup.find_all('div', id='content'))
 
     # 获取剧名
     series = name_cn = name_en = ''
@@ -83,10 +83,10 @@ def get_data(url):
     # 类型
     types = ''
     try:
-        t = soup.find_all('span', property="v:genre")
-        types = t[0].text
-        for tt in range(1, len(t)):
-            types += ' / ' + t[tt].text
+        types_text = soup.find_all('span', property="v:genre")
+        types = types_text[0].text
+        for t in range(1, len(types_text)):
+            types += ' / ' + types_text[t].text
         # print(types)
     except Exception as e:
         print('types: ', e.args)
@@ -94,8 +94,8 @@ def get_data(url):
     # 首播日期
     date = ''
     try:
-        d = soup.find_all('span', property="v:initialReleaseDate")[0].text
-        date = re.sub(u"\\(.*?\\)", "", d)
+        date_text = soup.find_all('span', property="v:initialReleaseDate")[0].text
+        date = re.sub(u"\\(.*?\\)", "", date_text)
         # print(date)
     except Exception as e:
         print('date: ', e.args)
@@ -132,8 +132,8 @@ def get_data(url):
     get_url = re.compile(r'<span class="pl">IMDb链接:</span>(.*?)<br/>')
     try:
         a_content = re.findall(get_url, item)[0].strip()
-        asp = BeautifulSoup(a_content, "html.parser")
-        imdb_url = asp.find_all('a')[0].get('href')
+        a_soup = BeautifulSoup(a_content, "html.parser")
+        imdb_url = a_soup.find_all('a')[0].get('href')
         # print(imdb_url)
     except Exception as e:
         print('imdb_url: ', e.args)
@@ -150,8 +150,8 @@ def get_data(url):
     total_season = '1'
     try:
         season = str(soup.find_all('select', id="season"))
-        ts = BeautifulSoup(season, "html.parser")
-        total_season = ts.find_all('option')[-1].text
+        season_soup = BeautifulSoup(season, "html.parser")
+        total_season = season_soup.find_all('option')[-1].text
         # print(total_season)
     except Exception as e:
         print('total_season: ', e.args)
@@ -160,8 +160,8 @@ def get_data(url):
     # 简介
     summary = '暂无'
     try:
-        summary = soup.find_all('span', property="v:summary")[0].text.strip()
-        summary = re.sub('\s', '', summary)
+        summary_text = soup.find_all('span', property="v:summary")[0].text.strip()
+        summary = re.sub('/s', '', summary_text)
         # print(summary)
     except Exception as e:
         print('summary: ', e.args)
@@ -242,5 +242,4 @@ def get_data(url):
 
 
 if __name__ == '__main__':
-    # search_common('蝙蝠侠')
-    search_movie('绿箭侠')
+    search_common('蝙蝠侠')

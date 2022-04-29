@@ -3,33 +3,34 @@ from bs4 import BeautifulSoup
 import re
 import urllib.request
 import urllib.error
-from urllib import parse
 import uuid
 import time
 import datetime
 import constant
 
 
-def search_common(key):
+def search_common(key: str, cate: str = '1002'):
+    """
+    基础搜索
+
+    :param key: 关键词
+    :param cate: 类别, 默认 1002 电影/剧集
+    :return:
+    """
     search_url = 'https://www.douban.com/search'
     param = {
+        'cat': cate,
         'q': key
     }
     response = requests.get(url=search_url, params=param, headers=constant.HEADERS)
-    html = response.text.encode("utf-8")
+    html = response.text.encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
-    urls = []
-    for item in soup.find_all('div', class_="title"):
-        bs = BeautifulSoup(str(item), 'html.parser')
-        if bs.find_all('span') and bs.find_all('span')[0].text == '[电影]':
-            a = bs.find_all('a', target="_blank")[0]
-            name = a.text
-            if key.split()[0] == name.split()[0]:
-                h = a.get('href')
-                href = h.split('&')[0].split('=')[1]
-                video_url = parse.unquote(href)
-                urls.append(video_url)
-    print(urls)
+    result_list = soup.find('div', class_='result-list')
+    for result in result_list.find_all('div', class_='result'):
+        title = result.find('span').text + ' ' + result.find_all('a')[1].text
+        link = result.find_all('a')[1].get('href')
+        desc = result.find('p').text
+        print(title + '\n' + link + '\n' + desc)
 
 
 def search_movie(key):
@@ -38,7 +39,7 @@ def search_movie(key):
         'search_text': key
     }
     response = requests.get(url=url, params=params, headers=constant.HEADERS)
-    html = response.text.encode("utf-8")
+    html = response.text.encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
     urls = []
     for item in soup.find_all('div', class_="title"):
@@ -259,9 +260,8 @@ def get_data(url):
         # 分割url
         with open('./data/url_list.txt', 'a', encoding='UTF-8') as fp:
             fp.write('# ' + series_cn + '\n')
-            fp.close()
-        print('data_series inserted')
+    fp.close()
 
 
 if __name__ == '__main__':
-    search_common("hhh")
+    search_common('蝙蝠侠')

@@ -4,7 +4,6 @@ import re
 import urllib.request
 import urllib.error
 import uuid
-import time
 import datetime
 import constant
 
@@ -33,30 +32,9 @@ def search_common(key: str, cate: str = '1002'):
         print(title + '\n' + link + '\n' + desc)
 
 
-def search_movie(key):
-    url = 'https://search.douban.com/movie/subject_search'
-    params = {
-        'search_text': key
-    }
-    response = requests.get(url=url, params=params, headers=constant.HEADERS)
-    html = response.text.encode('utf-8')
-    soup = BeautifulSoup(html, 'html.parser')
-    urls = []
-    for item in soup.find_all('div', class_="title"):
-        sp = BeautifulSoup(str(item), 'html.parser')
-        if sp.find_all('span') and sp.find_all('span')[0].text == '[剧集]':
-            a = sp.find_all('a')[0]
-            name = a.text
-            if key.split()[0] == name.split()[0]:
-                h = a.get('href')
-                urls.append(h)
-    print(urls)
-
-
 def get_data(url):
     request = urllib.request.Request(url, headers=constant.HEADERS)
-    html = ""
-    # 获取网页源码
+    html = ''
     try:
         response = urllib.request.urlopen(request)
         html = response.read().decode("utf-8")
@@ -264,4 +242,5 @@ def get_data(url):
 
 
 if __name__ == '__main__':
-    search_common('蝙蝠侠')
+    # search_common('蝙蝠侠')
+    search_movie('绿箭侠')

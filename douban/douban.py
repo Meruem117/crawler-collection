@@ -42,6 +42,7 @@ def get_series_data(douban_id: str):
     html = response.text.encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
     content = soup.find('div', id='content')
+    info = content.find('div', id='info')
 
     # 剧集中文名
     name_cn = ''
@@ -64,7 +65,8 @@ def get_series_data(douban_id: str):
             name_en = series_en = ' '.join(names[1:])
     except Exception as e:
         print(e.args)
-    print(name_cn, name_en, series_cn, series_en)
+    finally:
+        print(name_cn, name_en, series_cn, series_en)
 
     # 图片
     image = ''
@@ -72,7 +74,8 @@ def get_series_data(douban_id: str):
         image = content.find('div', id='mainpic').find('img').get('src')
     except Exception as e:
         print(e.args)
-    print(image)
+    finally:
+        print(image)
 
     # 评分
     score = ''
@@ -80,28 +83,29 @@ def get_series_data(douban_id: str):
         score = content.find('div', id='interest_sectl').find('div', class_='rating_self').find('strong').text
     except Exception as e:
         print('score: ', e.args)
-    print(score)
+    finally:
+        print(score)
 
     # 类型
-    cate = ''
+    types = ''
     try:
-        cate_list = content.find('div', id='info').find_all('span', property='v:genre')
+        cate_list = info.find_all('span', property='v:genre')
+        cate_text_list = []
         for cate in cate_list:
-            print(type)
-        # types = types_text[0].text
-        # for t in range(1, len(types_text)):
-        #     types += ' / ' + types_text[t].text
+            cate_text_list.append(cate.text)
+        types = '/'.join(cate_text_list)
     except Exception as e:
-        print('types: ', e.args)
+        print(e.args)
+    finally:
+        print(types)
 
     # 首播日期
     date = ''
     try:
-        date_text = soup.find_all('span', property="v:initialReleaseDate")[0].text
+        date_text = info.find('span', property='v:initialReleaseDate').text
         date = re.sub(u"\\(.*?\\)", "", date_text)
-        # print(date)
     except Exception as e:
-        print('date: ', e.args)
+        print(e.args)
 
     # 国家/地区
     region = '暂无'

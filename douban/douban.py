@@ -3,6 +3,8 @@ from bs4 import BeautifulSoup
 import re
 import datetime
 import json
+import random
+import string
 import constant
 
 
@@ -241,6 +243,18 @@ def get_series_data(douban_id: str):
     }
     json_data = json.dumps(data, indent=4, separators=(',', ': '), ensure_ascii=False)
     print(json_data)
+
+
+def generate_series_id() -> str:
+    salt = ''.join(random.sample(string.ascii_letters + string.digits, 4))
+    sid = 'S' + salt
+    return sid
+
+
+def generate_video_id() -> str:
+    salt = ''.join(random.sample(string.ascii_letters + string.digits, 6))
+    vid = 'SV' + salt
+    return vid
 
 
 if __name__ == '__main__':

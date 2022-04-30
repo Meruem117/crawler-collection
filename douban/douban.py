@@ -65,7 +65,7 @@ def get_series_data(douban_id: str):
             name_en = series_en = ' '.join(names[1:])
     except Exception as e:
         print('name: ', e.args)
-    finally:
+    else:
         print(name_cn, name_en, series_cn, series_en)
 
     # 图片
@@ -74,7 +74,7 @@ def get_series_data(douban_id: str):
         image = content.find('div', id='mainpic').find('img').get('src')
     except Exception as e:
         print('image: ', e.args)
-    finally:
+    else:
         print(image)
 
     # 评分
@@ -83,7 +83,7 @@ def get_series_data(douban_id: str):
         score = interest.find('div', class_='rating_self').find('strong').text
     except Exception as e:
         print('score: ', e.args)
-    finally:
+    else:
         print(score)
 
     # 热度 - 评价人数
@@ -92,7 +92,7 @@ def get_series_data(douban_id: str):
         heat = interest.find('span', property="v:votes").text
     except Exception as e:
         print('heat: ', e.args)
-    finally:
+    else:
         print(heat)
 
     # 类型
@@ -105,7 +105,7 @@ def get_series_data(douban_id: str):
         types = '/'.join(cate_text_list)
     except Exception as e:
         print('types: ', e.args)
-    finally:
+    else:
         print(types)
 
     # 首播日期
@@ -115,7 +115,7 @@ def get_series_data(douban_id: str):
         date = date_text[0:10]
     except Exception as e:
         print('date: ', e.args)
-    finally:
+    else:
         print(date)
 
     # 国家/地区
@@ -125,7 +125,7 @@ def get_series_data(douban_id: str):
         region = re.search(get_region, str(info)).group(1).strip()
     except Exception as e:
         print('region: ', e.args)
-    finally:
+    else:
         print(region)
 
     # 当季集数
@@ -135,7 +135,7 @@ def get_series_data(douban_id: str):
         episodes = re.search(get_episodes, str(info)).group(1).strip()
     except Exception as e:
         print('episodes: ', e.args)
-    finally:
+    else:
         print(episodes)
 
     # 单集片长
@@ -145,7 +145,7 @@ def get_series_data(douban_id: str):
         length = re.search(get_length, str(info)).group(1).strip()
     except Exception as e:
         print('length: ', e.args)
-    finally:
+    else:
         print(length)
 
     # IMDb
@@ -155,7 +155,7 @@ def get_series_data(douban_id: str):
         imdb = re.search(get_imdb, str(info)).group(1).strip()
     except Exception as e:
         print('imdb: ', e.args)
-    finally:
+    else:
         print(imdb)
 
     # 当前季
@@ -168,7 +168,7 @@ def get_series_data(douban_id: str):
             current_season = '1'
     except Exception as e:
         print('current_season: ', e.args)
-    finally:
+    else:
         print(current_season)
 
     # 总季数
@@ -181,7 +181,7 @@ def get_series_data(douban_id: str):
             total_season = '1'
     except Exception as e:
         print('total_season: ', e.args)
-    finally:
+    else:
         print(total_season)
 
     # 简介
@@ -190,7 +190,7 @@ def get_series_data(douban_id: str):
         summary = content.find('div', id='related-info').find('span', property='v:summary').text
     except Exception as e:
         print('summary: ', e.args)
-    finally:
+    else:
         print(summary)
 
     # 是否最新季

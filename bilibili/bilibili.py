@@ -45,21 +45,21 @@ def get_up_info(mid: str) -> None:
     data = dataset.get('data')
     # base info
     card = data.get('card')
-    name: str = card.get('name')
-    gender: str = card.get('sex')
-    avatar: str = card.get('face')
-    fans: int = card.get('fans')
-    attention: int = card.get('attention')
-    sign: str = card.get('sign')
+    name = card.get('name')
+    gender = card.get('sex')
+    avatar = card.get('face')
+    fans = card.get('fans')
+    attention = card.get('attention')
+    sign = card.get('sign')
     # official description
     official = card.get('Official')
-    title: str = official.get('title')
-    desc: str = official.get('desc')
+    title = official.get('title')
+    desc = official.get('desc')
     # statistics
-    video_num: int = data.get('archive_count')
-    article_num: int = data.get('article_count')
-    follower_num: int = data.get('follower')
-    like_num: int = data.get('like_num')
+    video_num = data.get('archive_count')
+    article_num = data.get('article_count')
+    follower_num = data.get('follower')
+    like_num = data.get('like_num')
 
 
 def get_videos(mid: str, name: str, pn: int) -> None:

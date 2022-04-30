@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 import re
 import datetime
+import json
 import constant
 
 
@@ -36,10 +37,11 @@ def get_series_data(douban_id: str):
     :param douban_id: 豆瓣id
     :return:
     """
-    url = 'https://movie.douban.com/subject/' + douban_id
-    response = requests.get(url=url, headers=constant.HEADERS)
+    douban_url = 'https://movie.douban.com/subject/' + douban_id + '/'
+    response = requests.get(url=douban_url, headers=constant.HEADERS)
     html = response.text.encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
+
     content = soup.find('div', id='content')
     interest = content.find('div', id='interest_sectl')
     info = content.find('div', id='info')
@@ -65,8 +67,8 @@ def get_series_data(douban_id: str):
             name_en = series_en = ' '.join(names[1:])
     except Exception as e:
         print('name: ', e.args)
-    else:
-        print(name_cn, name_en, series_cn, series_en)
+    # else:
+    #     print(name_cn, name_en, series_cn, series_en)
 
     # 图片
     image = ''
@@ -74,8 +76,8 @@ def get_series_data(douban_id: str):
         image = content.find('div', id='mainpic').find('img').get('src')
     except Exception as e:
         print('image: ', e.args)
-    else:
-        print(image)
+    # else:
+    #     print(image)
 
     # 评分
     score = ''
@@ -83,8 +85,8 @@ def get_series_data(douban_id: str):
         score = interest.find('div', class_='rating_self').find('strong').text
     except Exception as e:
         print('score: ', e.args)
-    else:
-        print(score)
+    # else:
+    #     print(score)
 
     # 热度 - 评价人数
     heat = ''
@@ -92,8 +94,8 @@ def get_series_data(douban_id: str):
         heat = interest.find('span', property="v:votes").text
     except Exception as e:
         print('heat: ', e.args)
-    else:
-        print(heat)
+    # else:
+    #     print(heat)
 
     # 类型
     types = ''
@@ -105,8 +107,8 @@ def get_series_data(douban_id: str):
         types = '/'.join(cate_text_list)
     except Exception as e:
         print('types: ', e.args)
-    else:
-        print(types)
+    # else:
+    #     print(types)
 
     # 首播日期
     date = ''
@@ -115,8 +117,8 @@ def get_series_data(douban_id: str):
         date = date_text[0:10]
     except Exception as e:
         print('date: ', e.args)
-    else:
-        print(date)
+    # else:
+    #     print(date)
 
     # 国家/地区
     region = ''
@@ -125,28 +127,18 @@ def get_series_data(douban_id: str):
         region = re.search(get_region, str(info)).group(1).strip()
     except Exception as e:
         print('region: ', e.args)
-    else:
-        print(region)
+    # else:
+    #     print(region)
 
-    # 当季集数
-    episodes = ''
-    get_episodes = re.compile(r'<span class="pl">集数:</span>(.*?)<br/>')
+    # 语言
+    language = ''
+    get_language = re.compile(r'<span class="pl">语言:</span>(.*?)<br/>')
     try:
-        episodes = re.search(get_episodes, str(info)).group(1).strip()
+        language = re.search(get_language, str(info)).group(1).strip()
     except Exception as e:
-        print('episodes: ', e.args)
-    else:
-        print(episodes)
-
-    # 单集片长
-    length = ''
-    get_length = re.compile(r'<span class="pl">单集片长:</span>(.*?)<br/>')
-    try:
-        length = re.search(get_length, str(info)).group(1).strip()
-    except Exception as e:
-        print('length: ', e.args)
-    else:
-        print(length)
+        print('language: ', e.args)
+    # else:
+    #     print(language)
 
     # IMDb
     imdb = ''
@@ -155,8 +147,8 @@ def get_series_data(douban_id: str):
         imdb = re.search(get_imdb, str(info)).group(1).strip()
     except Exception as e:
         print('imdb: ', e.args)
-    else:
-        print(imdb)
+    # else:
+    #     print(imdb)
 
     # 当前季
     current_season = ''
@@ -168,8 +160,8 @@ def get_series_data(douban_id: str):
             current_season = '1'
     except Exception as e:
         print('current_season: ', e.args)
-    else:
-        print(current_season)
+    # else:
+    #     print(current_season)
 
     # 总季数
     total_season = ''
@@ -181,30 +173,73 @@ def get_series_data(douban_id: str):
             total_season = '1'
     except Exception as e:
         print('total_season: ', e.args)
-    else:
-        print(total_season)
-
-    # 简介
-    summary = ''
-    try:
-        summary = content.find('div', id='related-info').find('span', property='v:summary').text
-    except Exception as e:
-        print('summary: ', e.args)
-    else:
-        print(summary)
+    # else:
+    #     print(total_season)
 
     # 是否最新季
     if current_season == total_season:
         is_latest = '1'
     else:
         is_latest = '0'
-    print(is_latest)
+    # print(is_latest)
+
+    # 当季集数
+    episodes = ''
+    get_episodes = re.compile(r'<span class="pl">集数:</span>(.*?)<br/>')
+    try:
+        episodes = re.search(get_episodes, str(info)).group(1).strip()
+    except Exception as e:
+        print('episodes: ', e.args)
+    # else:
+    #     print(episodes)
+
+    # 单集片长
+    length = ''
+    get_length = re.compile(r'<span class="pl">单集片长:</span>(.*?)<br/>')
+    try:
+        length = re.search(get_length, str(info)).group(1).strip()
+    except Exception as e:
+        print('length: ', e.args)
+    # else:
+    #     print(length)
+
+    # 简介
+    summary = ''
+    try:
+        summary = content.find('div', class_='related-info').find('span', property='v:summary').text.strip()
+    except Exception as e:
+        print('summary: ', e.args)
+    # else:
+    #     print(summary)
 
     # 时间
     time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    print(time)
+    # print(time)
 
-    data = {}
+    data = {
+        'douban_url': douban_url,
+        'douban_id': douban_id,
+        'name_cn': name_cn,
+        'name_en': name_en,
+        'series_cn': series_cn,
+        'series_en': series_en,
+        'image': image,
+        'score': score,
+        'heat': heat,
+        'types': types,
+        'date': date,
+        'region': region,
+        'language': language,
+        'imdb': imdb,
+        'current_season': current_season,
+        'total_season': total_season,
+        'is_latest': is_latest,
+        'episodes': episodes,
+        'length': length,
+        'summary': summary
+    }
+    json_data = json.dumps(data, indent=4, separators=(',', ': '), ensure_ascii=False)
+    print(json_data)
 
 
 if __name__ == '__main__':

@@ -236,7 +236,8 @@ def get_series_data(douban_id: str):
         'is_latest': is_latest,
         'episodes': episodes,
         'length': length,
-        'summary': summary
+        'summary': summary,
+        'time': time
     }
     json_data = json.dumps(data, indent=4, separators=(',', ': '), ensure_ascii=False)
     print(json_data)

@@ -1,1 +1,0 @@
-series_id;series_name;region;media;total_season;create_time;last_modified

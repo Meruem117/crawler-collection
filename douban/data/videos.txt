@@ -1,1 +1,0 @@
-video_id;name_cn;name_en;video_img;series;type;score;date;current_season;total_episode;length;is_latest;heat;douban_url;imdb_url;summary;is_end;create_time;last_modified

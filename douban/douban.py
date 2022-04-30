@@ -30,53 +30,67 @@ def search_common(key: str, cate: str = '1002'):
         print(title + '\n' + link + '\n' + desc)
 
 
-def get_data(url: str):
+def get_series_data(douban_id: str):
+    """
+    获取剧集信息
+
+    :param douban_id: 豆瓣id
+    :return:
+    """
+    url = 'https://movie.douban.com/subject/' + douban_id
     response = requests.get(url=url, headers=constant.HEADERS)
     html = response.text.encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
     content = soup.find('div', id='content')
 
-    # 获取剧名
-    series = name_cn = name_en = ''
+    # 剧集中文名
+    name_cn = ''
+    # 剧集英文名
+    name_en = ''
+    # 系列中文名
+    series_cn = ''
+    # 系列英文名
+    series_en = ''
     try:
         title = content.find('h1')
-
-        s = ' '
-        if name[-2] == 'Season':
-            series = s.join(name[2:-2])
-            series_cn = name[0]
-            name_cn = s.join(name[0:2])
-            name_en = series + ' ' + s.join(name[-2:])
+        names = title.find('span', property='v:itemreviewed').text.split()
+        if names[-2] == 'Season':
+            name_cn = ' '.join(names[0:2])
+            name_en = ' '.join(names[2:])
+            series_cn = names[0]
+            series_en = ' '.join(names[2:-2])
         else:
-            series_cn = name_cn = name[0]
-            series = name_en = s.join(name[1:])
+            name_cn = series_cn = names[0]
+            name_en = series_en = ' '.join(names[1:])
     except Exception as e:
-        print('name: ', e.args)
+        print(e.args)
+    print(name_cn, name_en, series_cn, series_en)
 
     # 图片
-    img = ''
+    image = ''
     try:
-        img = soup.find_all('img', title="点击看更多海报")[0].get('src')
-        # print(img)
+        image = content.find('div', id='mainpic').find('img').get('src')
     except Exception as e:
-        print('img: ', e.args)
+        print(e.args)
+    print(image)
 
     # 评分
     score = ''
     try:
-        score = soup.find_all('strong', property="v:average")[0].text
-        # print(score)
+        score = content.find('div', id='interest_sectl').find('div', class_='rating_self').find('strong').text
     except Exception as e:
         print('score: ', e.args)
+    print(score)
 
     # 类型
-    types = ''
+    cate = ''
     try:
-        types_text = soup.find_all('span', property="v:genre")
-        types = types_text[0].text
-        for t in range(1, len(types_text)):
-            types += ' / ' + types_text[t].text
-        # print(types)
+        cate_list = content.find('div', id='info').find_all('span', property='v:genre')
+        for cate in cate_list:
+            print(type)
+        # types = types_text[0].text
+        # for t in range(1, len(types_text)):
+        #     types += ' / ' + types_text[t].text
     except Exception as e:
         print('types: ', e.args)
 
@@ -190,46 +204,47 @@ def get_data(url: str):
                   is_latest, heat, url, imdb_url, summary, is_end, tm, tm]
 
     # video数据
-    with open('./data/videos.txt', 'a', encoding='UTF-8') as fp:
-        fp.write('\n')
-        for vd in video_data:
-            fp.write(vd + ';')
-        fp.close()
-    print('data_video inserted')
+    # with open('./data/videos.txt', 'a', encoding='UTF-8') as fp:
+    #     fp.write('\n')
+    #     for vd in video_data:
+    #         fp.write(vd + ';')
+    #     fp.close()
+    # print('data_video inserted')
     # 写入csv
-    with open("./data/video.csv", "a") as csv_file:
-        writer = csv.writer(csv_file)
-        # 多行 writerows,单行 writerow
-        writer.writerow(video_data)
+    # with open("./data/video.csv", "a") as csv_file:
+    #     writer = csv.writer(csv_file)
+    #     # 多行 writerows,单行 writerow
+    #     writer.writerow(video_data)
 
     # 下载图片
-    path = './picture/' + series + ' S' + current_season + '.jpg'
-    r = requests.get(img)
-    with open(path, "wb") as f:
-        f.write(r.content)
-        f.close()
-
-    # 豆瓣链接
-    with open('./data/url_list.txt', 'a', encoding='UTF-8') as fp:
-        fp.write(url + '\n')
-        fp.close()
-
-    if is_latest == '1':
-        # series数据
-        uid = str(uuid.uuid4())
-        sid = ''.join(uid.split('-'))
-        series_data = [sid, series, region, media, total_season, tm, tm]
-        with open('./data/series.txt', 'a', encoding='UTF-8') as fp:
-            fp.write('\n')
-            for sd in series_data:
-                fp.write(sd + ';')
-            fp.close()
-        # 分割url
-        with open('./data/url_list.txt', 'a', encoding='UTF-8') as fp:
-            fp.write('# ' + series_cn + '\n')
-    fp.close()
+    # path = './picture/' + series + ' S' + current_season + '.jpg'
+    # r = requests.get(img)
+    # with open(path, "wb") as f:
+    #     f.write(r.content)
+    #     f.close()
+    #
+    # # 豆瓣链接
+    # with open('./data/url_list.txt', 'a', encoding='UTF-8') as fp:
+    #     fp.write(url + '\n')
+    #     fp.close()
+    #
+    # if is_latest == '1':
+    #     # series数据
+    #     uid = str(uuid.uuid4())
+    #     sid = ''.join(uid.split('-'))
+    #     series_data = [sid, series, region, media, total_season, tm, tm]
+    #     with open('./data/series.txt', 'a', encoding='UTF-8') as fp:
+    #         fp.write('\n')
+    #         for sd in series_data:
+    #             fp.write(sd + ';')
+    #         fp.close()
+    #     # 分割url
+    #     with open('./data/url_list.txt', 'a', encoding='UTF-8') as fp:
+    #         fp.write('# ' + series_cn + '\n')
+    # fp.close()
 
 
 if __name__ == '__main__':
     # search_common('蝙蝠侠')
-    get_data('https://movie.douban.com/subject/26358318/')
+    get_series_data('26358318')
+    get_series_data('30450371')

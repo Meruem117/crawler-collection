@@ -1,7 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import uuid
 import datetime
 import constant
 
@@ -42,6 +41,7 @@ def get_series_data(douban_id: str):
     html = response.text.encode('utf-8')
     soup = BeautifulSoup(html, 'html.parser')
     content = soup.find('div', id='content')
+    interest = content.find('div', id='interest_sectl')
     info = content.find('div', id='info')
 
     # 剧集中文名
@@ -80,11 +80,20 @@ def get_series_data(douban_id: str):
     # 评分
     score = ''
     try:
-        score = content.find('div', id='interest_sectl').find('div', class_='rating_self').find('strong').text
+        score = interest.find('div', class_='rating_self').find('strong').text
     except Exception as e:
         print('score: ', e.args)
     finally:
         print(score)
+
+    # 热度 - 评价人数
+    heat = ''
+    try:
+        heat = interest.find('span', property="v:votes").text
+    except Exception as e:
+        print('heat: ', e.args)
+    finally:
+        print(heat)
 
     # 类型
     types = ''
@@ -161,100 +170,41 @@ def get_series_data(douban_id: str):
         print('current_season: ', e.args)
     finally:
         print(current_season)
-    return
+
     # 总季数
-    total_season = '1'
+    total_season = ''
     try:
-        season = str(soup.find_all('select', id="season"))
-        season_soup = BeautifulSoup(season, "html.parser")
-        total_season = season_soup.find_all('option')[-1].text
-        # print(total_season)
+        select = info.find('select', id='season')
+        if select:
+            total_season = select.find_all('option')[-1].text
+        else:
+            total_season = '1'
     except Exception as e:
         print('total_season: ', e.args)
-    # total_season = '8'
+    finally:
+        print(total_season)
 
     # 简介
-    summary = '暂无'
+    summary = ''
     try:
-        summary_text = soup.find_all('span', property="v:summary")[0].text.strip()
-        summary = re.sub('/s', '', summary_text)
-        # print(summary)
+        summary = content.find('div', id='related-info').find('span', property='v:summary').text
     except Exception as e:
         print('summary: ', e.args)
-
-    # 热度
-    heat = '0'
-    try:
-        heat = soup.find_all('span', property="v:votes")[0].text
-        # print(heat)
-    except Exception as e:
-        print('heat: ', e.args)
-
-    # id
-    uid = str(uuid.uuid4())
-    vid = ''.join(uid.split('-'))
-    # print(vid)
-
-    # 时间
-    tm = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-    # print(tm)
-
-    # 暂时没有的数据
-    # 媒体
-    media = ''
-    # 是否完结(完结/连载)
-    is_end = '1'
+    finally:
+        print(summary)
 
     # 是否最新季
     if current_season == total_season:
         is_latest = '1'
     else:
         is_latest = '0'
-    # print(is_latest)
+    print(is_latest)
 
-    # video数据
-    video_data = [vid, name_cn, name_en, img, series, types, score, date, current_season, episodes, length,
-                  is_latest, heat, url, imdb_url, summary, is_end, tm, tm]
+    # 时间
+    time = datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S')
+    print(time)
 
-    # video数据
-    # with open('./data/videos.txt', 'a', encoding='UTF-8') as fp:
-    #     fp.write('\n')
-    #     for vd in video_data:
-    #         fp.write(vd + ';')
-    #     fp.close()
-    # print('data_video inserted')
-    # 写入csv
-    # with open("./data/video.csv", "a") as csv_file:
-    #     writer = csv.writer(csv_file)
-    #     # 多行 writerows,单行 writerow
-    #     writer.writerow(video_data)
-
-    # 下载图片
-    # path = './picture/' + series + ' S' + current_season + '.jpg'
-    # r = requests.get(img)
-    # with open(path, "wb") as f:
-    #     f.write(r.content)
-    #     f.close()
-    #
-    # # 豆瓣链接
-    # with open('./data/url_list.txt', 'a', encoding='UTF-8') as fp:
-    #     fp.write(url + '\n')
-    #     fp.close()
-    #
-    # if is_latest == '1':
-    #     # series数据
-    #     uid = str(uuid.uuid4())
-    #     sid = ''.join(uid.split('-'))
-    #     series_data = [sid, series, region, media, total_season, tm, tm]
-    #     with open('./data/series.txt', 'a', encoding='UTF-8') as fp:
-    #         fp.write('\n')
-    #         for sd in series_data:
-    #             fp.write(sd + ';')
-    #         fp.close()
-    #     # 分割url
-    #     with open('./data/url_list.txt', 'a', encoding='UTF-8') as fp:
-    #         fp.write('# ' + series_cn + '\n')
-    # fp.close()
+    data = {}
 
 
 if __name__ == '__main__':

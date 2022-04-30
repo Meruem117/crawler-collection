@@ -64,7 +64,7 @@ def get_series_data(douban_id: str):
             name_cn = series_cn = names[0]
             name_en = series_en = ' '.join(names[1:])
     except Exception as e:
-        print(e.args)
+        print('name: ', e.args)
     finally:
         print(name_cn, name_en, series_cn, series_en)
 
@@ -73,7 +73,7 @@ def get_series_data(douban_id: str):
     try:
         image = content.find('div', id='mainpic').find('img').get('src')
     except Exception as e:
-        print(e.args)
+        print('image: ', e.args)
     finally:
         print(image)
 
@@ -104,7 +104,7 @@ def get_series_data(douban_id: str):
             cate_text_list.append(cate.text)
         types = '/'.join(cate_text_list)
     except Exception as e:
-        print(e.args)
+        print('types: ', e.args)
     finally:
         print(types)
 
@@ -114,7 +114,7 @@ def get_series_data(douban_id: str):
         date_text = info.find('span', property='v:initialReleaseDate').text
         date = date_text[0:10]
     except Exception as e:
-        print(e.args)
+        print('date: ', e.args)
     finally:
         print(date)
 

@@ -1,8 +1,6 @@
 import requests
 from bs4 import BeautifulSoup
 import re
-import urllib.request
-import urllib.error
 import uuid
 import datetime
 import constant
@@ -32,26 +30,17 @@ def search_common(key: str, cate: str = '1002'):
         print(title + '\n' + link + '\n' + desc)
 
 
-def get_data(url):
-    request = urllib.request.Request(url, headers=constant.HEADERS)
-    html = ''
-    try:
-        response = urllib.request.urlopen(request)
-        html = response.read().decode("utf-8")
-    except urllib.error.URLError as e:
-        if hasattr(e, "code"):
-            print(e.code)
-        if hasattr(e, "reason"):
-            print(e.reason)
-    # print(html)
-
-    soup = BeautifulSoup(html, "html.parser")
-    item = str(soup.find_all('div', id='content'))
+def get_data(url: str):
+    response = requests.get(url=url, headers=constant.HEADERS)
+    html = response.text.encode('utf-8')
+    soup = BeautifulSoup(html, 'html.parser')
+    content = soup.find('div', id='content')
 
     # 获取剧名
     series = name_cn = name_en = ''
     try:
-        name = soup.find_all('span', property="v:itemreviewed")[0].text.split()
+        title = content.find('h1')
+
         s = ' '
         if name[-2] == 'Season':
             series = s.join(name[2:-2])
@@ -242,4 +231,5 @@ def get_data(url):
 
 
 if __name__ == '__main__':
-    search_common('蝙蝠侠')
+    # search_common('蝙蝠侠')
+    get_data('https://movie.douban.com/subject/26358318/')

@@ -115,7 +115,7 @@ def get_series_data(douban_id: str):
     try:
         region = re.search(get_region, str(info)).group(1).strip()
     except Exception as e:
-        print(e.args)
+        print('region: ', e.args)
     finally:
         print(region)
 
@@ -123,39 +123,45 @@ def get_series_data(douban_id: str):
     episodes = ''
     get_episodes = re.compile(r'<span class="pl">集数:</span>(.*?)<br/>')
     try:
-        episodes = re.findall(get_episodes, item)[0].strip()
-        # print(episodes)
+        episodes = re.search(get_episodes, str(info)).group(1).strip()
     except Exception as e:
         print('episodes: ', e.args)
+    finally:
+        print(episodes)
 
     # 单集片长
     length = ''
     get_length = re.compile(r'<span class="pl">单集片长:</span>(.*?)<br/>')
     try:
-        length = re.findall(get_length, item)[0].strip()
-        # print(length)
+        length = re.search(get_length, str(info)).group(1).strip()
     except Exception as e:
         print('length: ', e.args)
+    finally:
+        print(length)
 
-    # IMDb链接
-    imdb_url = ''
-    get_url = re.compile(r'<span class="pl">IMDb链接:</span>(.*?)<br/>')
+    # IMDb
+    imdb = ''
+    get_imdb = re.compile(r'<span class="pl">IMDb:</span>(.*?)<br/>')
     try:
-        a_content = re.findall(get_url, item)[0].strip()
-        a_soup = BeautifulSoup(a_content, "html.parser")
-        imdb_url = a_soup.find_all('a')[0].get('href')
-        # print(imdb_url)
+        imdb = re.search(get_imdb, str(info)).group(1).strip()
     except Exception as e:
-        print('imdb_url: ', e.args)
+        print('imdb: ', e.args)
+    finally:
+        print(imdb)
 
     # 当前季
-    current_season = '1'
+    current_season = ''
     try:
-        current_season = soup.find_all('option', selected=True)[0].text
-        # print(current_season)
+        select = info.find('select', id='season')
+        if select:
+            current_season = select.find('option', selected='selected').text
+        else:
+            current_season = '1'
     except Exception as e:
         print('current_season: ', e.args)
-
+    finally:
+        print(current_season)
+    return
     # 总季数
     total_season = '1'
     try:

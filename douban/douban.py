@@ -8,7 +8,7 @@ import string
 import constant
 
 
-def search_common(key: str, cate: str = '1002'):
+def search_common(key: str, cate: str = '1002') -> None:
     """
     基础搜索
 
@@ -32,7 +32,7 @@ def search_common(key: str, cate: str = '1002'):
         print(title + '\n' + link + '\n' + desc)
 
 
-def get_series_data(douban_id: str):
+def get_series_data(douban_id: str) -> object:
     """
     获取剧集信息
 
@@ -243,6 +243,7 @@ def get_series_data(douban_id: str):
     }
     json_data = json.dumps(data, indent=4, separators=(',', ': '), ensure_ascii=False)
     print(json_data)
+    return data
 
 
 def generate_series_id() -> str:

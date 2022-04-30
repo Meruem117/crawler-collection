@@ -1,27 +1,20 @@
 # Bilibili Crawler
 
-python crawler for bilibili ups and videos, written in 2021
+python crawler for bilibili ups and videos
 
-## up_info
+## get_up_info
 
-参数：
-
-- up_id，即mid，点开up空间，url内获取
-
-## up_videos
+获取up主信息
 
 参数：
 
-- up_id，同上
-- up_name，复制完整名字即可
-- total_page，总页数，点开up空间的投稿，即可获取
+- mid: up主id, 点开up个人空间, url内获取
 
-PS：对获取的视频数据作了判断，如果是联合投稿，up不是当前的up，不会记录数据（主要是用于解决数据库中，bvid作为唯一性约束时会重复的问题，如果采用其他索引、约束等，没有此类问题，则把判断的那两行语句删除即可）
+## get_videos
 
-## auto_bili
+获取up主视频分页列表
 
-从数据库读取up列表，自动爬取所需数据
+参数：
 
-需自定义数据库参数，数据库表格结构为 (`id int`, `mid varchar(10)`, `name varchar(50)`)
-
-配置好后执行即可
+- mid: 同上
+- page: 视频列表页号

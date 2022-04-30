@@ -66,12 +66,11 @@ def get_up_info(mid: str) -> object:
     return info
 
 
-def get_videos(mid: str, name: str, page: int) -> list:
+def get_videos(mid: str, page: int) -> list:
     """
     获取分页视频列表
 
     :param mid: up主id
-    :param name: up名
     :param page: 页号
     :return:
     """
@@ -97,8 +96,7 @@ def get_videos(mid: str, name: str, page: int) -> list:
             description = v.get('description')
             created = v.get('created')
             tm = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(created))
-            if author == name:
-                video_list.append([bvid, mid, author, title, pic, play, review, comment, length, description, tm])
+            video_list.append([bvid, mid, author, title, pic, play, review, comment, length, description, tm])
     return video_list
 
 

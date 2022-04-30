@@ -103,24 +103,27 @@ def get_series_data(douban_id: str):
     date = ''
     try:
         date_text = info.find('span', property='v:initialReleaseDate').text
-        date = re.sub(u"\\(.*?\\)", "", date_text)
+        date = date_text[0:10]
     except Exception as e:
         print(e.args)
+    finally:
+        print(date)
 
     # 国家/地区
-    region = '暂无'
+    region = ''
     get_region = re.compile(r'<span class="pl">制片国家/地区:</span>(.*?)<br/>')
     try:
-        region = re.findall(get_region, item)[0].strip()
-        # print(region)
+        region = re.search(get_region, str(info)).group(1).strip()
     except Exception as e:
-        print('region: ', e.args)
+        print(e.args)
+    finally:
+        print(region)
 
     # 当季集数
     episodes = ''
-    get_episode = re.compile(r'<span class="pl">集数:</span>(.*?)<br/>')
+    get_episodes = re.compile(r'<span class="pl">集数:</span>(.*?)<br/>')
     try:
-        episodes = re.findall(get_episode, item)[0].strip()
+        episodes = re.findall(get_episodes, item)[0].strip()
         # print(episodes)
     except Exception as e:
         print('episodes: ', e.args)
@@ -251,4 +254,4 @@ def get_series_data(douban_id: str):
 if __name__ == '__main__':
     # search_common('蝙蝠侠')
     get_series_data('26358318')
-    get_series_data('30450371')
+    # get_series_data('30450371')

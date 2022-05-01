@@ -4,3 +4,4 @@ Collections of python crawlers
 
 - Bilibili
 - Douban
+- Douyu

@@ -30,14 +30,14 @@ def get_room_info(rid: str) -> object:
     avatar = head.find('div', class_='Title-anchorPic').find('img').get('src')
     # print(avatar)
 
+    # 关注
+    # follower = head.find('span', class_='Title-followNum').text
+    # print(follower)
+
     # 等级
     level_class = head.find('div', class_='Title-AnchorLevel').find('div', class_='AnchorLevel').get('class')
     level = level_class[-1].split('-')[-1]
     # print(level)
-
-    # 关注数
-    # follower = head.find('span', class_='Title-followNum').text
-    # print(follower)
 
     # 分类
     cate_list = head.find('div', class_='Title-category').find_all('a', class_='Title-categoryItem')

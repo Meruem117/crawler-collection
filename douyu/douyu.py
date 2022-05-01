@@ -18,9 +18,26 @@ def get_room_info(rid: str) -> object:
     content = soup.find('div', class_='layout-Player').find('div', class_='layout-Player-main')
     head = content.find('div', class_='layout-Player-title')
 
-    # 直播间标题
+    # 标题
     title = head.find('h3', class_='Title-header').text
     # print(title)
+
+    # 主播
+    name = head.find('h2', class_='Title-anchorNameH2').text
+    # print(name)
+
+    # 头像
+    avatar = head.find('div', class_='Title-anchorPic').find('img').get('src')
+    # print(avatar)
+
+    # 等级
+    level_class = head.find('div', class_='Title-AnchorLevel').find('div', class_='AnchorLevel').get('class')
+    level = level_class[-1].split('-')[-1]
+    # print(level)
+
+    # 关注数
+    # follower = head.find('span', class_='Title-followNum').text
+    # print(follower)
 
     # 分类
     cate_list = head.find('div', class_='Title-category').find_all('a', class_='Title-categoryItem')
@@ -30,23 +47,6 @@ def get_room_info(rid: str) -> object:
             cate_text_list.append(cate.text)
     category = '/'.join(cate_text_list)
     # print(category)
-
-    # 主播
-    name = head.find('h2', class_='Title-anchorNameH2').text
-    # print(name)
-
-    # 关注数
-    # follower = head.find('span', class_='Title-followNum').text
-    # print(follower)
-
-    # 等级
-    level_class = head.find('div', class_='Title-AnchorLevel').find('div', class_='AnchorLevel').get('class')
-    level = level_class[-1].split('-')[-1]
-    # print(level)
-
-    # 头像
-    avatar = head.find('div', class_='Title-anchorPic').find('img').get('src')
-    # print(avatar)
 
     # 热度
     heat = head.find('a', class_='Title-anchorHot').find('div', class_='Title-anchorText').text
@@ -59,10 +59,10 @@ def get_room_info(rid: str) -> object:
     data = {
         'rid': rid,
         'title': title,
-        'category': category,
         'name': name,
-        'level': level,
         'avatar': avatar,
+        'level': level,
+        'category': category,
         'heat': heat,
         'society': society
     }
